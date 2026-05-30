@@ -120,6 +120,9 @@ def main():
     bar_mins = []
     bar_maxs = []
 
+    random_all = {}
+    random_200 = {}
+
     for name, mse in zip(names, ms_list):
 
         if not mse:
@@ -137,20 +140,30 @@ def main():
         else:
             mse_200_500 = []
 
+        if name == "Random Sampling":
+            random_all = {"mean": mean_val, "best": best_val, "worst": worst_val}
+            if mse_200_500:
+                random_200 = {"mean": mean_200_500, "best": best_200_500, "worst": worst_200_500}
+
+        def pct_str(val, ref):
+            if ref is not None:
+                return f" ({((val - ref) / ref) * 100:+.1f}%)"
+            return ""
+
         print(f"\n{name}:")
         print(f"  总轮数: {len(mse)}")
 
         print("  [全部轮次]")
-        print(f"    平均 test MSE: {mean_val:.6f}")
-        print(f"    最佳 test MSE: {best_val:.6f}")
-        print(f"    最差 test MSE: {worst_val:.6f}")
+        print(f"    平均 test MSE: {mean_val:.6f}{pct_str(mean_val, random_all.get('mean'))}")
+        print(f"    最佳 test MSE: {best_val:.6f}{pct_str(best_val, random_all.get('best'))}")
+        print(f"    最差 test MSE: {worst_val:.6f}{pct_str(worst_val, random_all.get('worst'))}")
 
         if mse_200_500:
             print("  [200-500轮]")
             print(f"    轮次数: {len(mse_200_500)}")
-            print(f"    平均 test MSE: {mean_200_500:.6f}")
-            print(f"    最佳 test MSE: {best_200_500:.6f}")
-            print(f"    最差 test MSE: {worst_200_500:.6f}")
+            print(f"    平均 test MSE: {mean_200_500:.6f}{pct_str(mean_200_500, random_200.get('mean'))}")
+            print(f"    最佳 test MSE: {best_200_500:.6f}{pct_str(best_200_500, random_200.get('best'))}")
+            print(f"    最差 test MSE: {worst_200_500:.6f}{pct_str(worst_200_500, random_200.get('worst'))}")
 
             if name in ("Random Sampling", "Facility Location Coreset", "K-Means Cluster Representative Selection"):
                 bar_display_name = name.replace("K-Means Cluster Representative Selection",
