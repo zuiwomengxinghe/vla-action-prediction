@@ -22,7 +22,7 @@ K-Means Representative/
 Temporal Variation/
 
 # 生成的图表
-*.png
+
 *.pt
 *.parquet
 
